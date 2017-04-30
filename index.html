@@ -20,17 +20,15 @@
         </div>
     </div>
     </div>
+
     <script type="text/javascript">
+
+
     var buttonsList = ["cats", "puppy", "octopus", "hug", "what's up"]
 
 
-
-    //going through the list
-    // add a button to it
-    // add API to it
-    // add print html
-
-
+    // Make Button From the Button List
+    // Then 
     function renderButtons() {
     	$("#buttons-display").empty();
         for (var i = 0; i < buttonsList.length; i++) {
@@ -40,34 +38,34 @@
             var buttonsOnload = $("<button>").append(buttonsList[i]);
             //add data attribute to each
             buttonsOnload.addClass("giphy");
+
+           
+
             buttonsOnload.attr("data-presetlist", buttonsList[i]);
             //add to screen
             $("#buttons-display").append(buttonsOnload);
 
 
 
-            // $("button").on("click", function(){
-
-            // 	for (var i = 0; i < 10; i++){
-            // 		//Write a Picture
-            // 		// $("#gif-display").append($("<p>").append(response.data[i].rating));
-
-            // 		console.log(response.data[i].rating)
-            // 		// Write a Rating
-            // 		$("#gif-display").append($("div").append(response.data[i].images.fixed_height.url));
-            // 	}
-
-            // });
+            
         }
-        $(".giphy").on("click", function() {
+        	$(".giphy").on("click", function() {
             giphyInfo($(this).attr("data-presetlist"));
 
-        })
-    }
+        	})
+    };
+
+
+
     renderButtons();
+
+
+
+    // Attach AJAX info
 
     function giphyInfo(gif) {
     	$("#gif-display").empty();
+
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gif + "&limit=10&rating=g&api_key=dc6zaTOxFJmzC";
 
         $.ajax({
@@ -78,34 +76,49 @@
 
             for (var i = 0; i < 10; i++) {
 
-                var imgUrl = response.data[i].images.fixed_height.url;
+                var imgUrl = response.data[i].images.fixed_height_still.url;
+                var rating = response.data[i].rating;
+
                 var theGif = $("<img>").attr("src", imgUrl);
 
+                $("img").addClass("giffy");
+
+                 theGif.attr("data-state", "still");
+
+                 //Still Link
+             	theGif.attr("data-still", response.data[i].images.fixed_height_still.url )
+             	//Animated Link
+              	theGif.attr("data-animate", response.data[i].images.fixed_height.url )
+
                 $("#gif-display").append(theGif);
+                $("#gif-display").append($("<p> Rating: " + rating + "</p>"));
+
+
+
 
             }
 
+            $(".giffy").on("click", function(){
+            	alert("click")
+            	var state = $(this).attr("data-state")
 
+            	if (state === "still"){
+            		$(this).attr("src", $(this).attr("data-animate"));
+        			$(this).attr("data-state", "animate");
 
+            	}
+            	else {
+            		$(this).attr("src", $(this).attr("data-still"));
+        			$(this).attr("data-state", "still");
+            	}
 
-            // var rate = response.data[i].rating;
-            // var rating = $("<p>").text("Rating: " + rate);
-            // $("#gif-display").append(theGif);
-
-            // console.log(rate)
-
+    		});
 
 
         })
     }
 
-    // $(document).on("click", ".giphy", console.log("giphyInfo"));
-
-
-
-
-
-
+    
 
     //For Adding New Buttons
 
