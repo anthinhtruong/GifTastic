@@ -1,138 +1,105 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>GifTastic</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
+    <title>GifTastic</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 </head>
+
 <body>
-<div id = "buttons-display"></div>
-
-<div class="row">
-
-		<div class= "col-md-8" id = "gif-display">
-		</div>
-
-		<div class = "col-md-4">
-				<form>
-						<input id = "user-input">
-						<button class="btn btn-default" id="add-buttons" type="submit">Submit</button>
-				</form>
-
-				</div>
-		</div>
-</div>
-
-
-<script type="text/javascript">
-
-var buttonsList = ["cats","puppy","octopus","hug","what's up"]
+    <div id="buttons-display"></div>
+    <div class="row">
+        <div class="col-md-8" id="gif-display">
+        </div>
+        <div class="col-md-4">
+            <form>
+                <input id="user-input">
+                <button class="btn btn-default" id="add-buttons" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+    var buttonsList = ["cats", "puppy", "octopus", "hug", "what's up"]
 
 
 
-//going through the list
-// add a button to it
-// add API to it
-// add print html
+    //going through the list
+    // add a button to it
+    // add API to it
+    // add print html
 
 
-function renderButtons(){
-	for (var i = 0; i < buttonsList.length; i++){
+    function renderButtons() {
+    	$("#buttons-display").empty();
+        for (var i = 0; i < buttonsList.length; i++) {
 
 
-			//add button to each items
-			var buttonsOnload = $("<button>").append(buttonsList[i]);
-			//add data attribute to each
-			buttonsOnload.addClass("giphy");
-			buttonsOnload.attr("data-presetlist", buttonsList[i]);
-			//add to screen
-			$("#buttons-display").append(buttonsOnload);
-			
-			giphyInfo();
-			
+            //add button to each items
+            var buttonsOnload = $("<button>").append(buttonsList[i]);
+            //add data attribute to each
+            buttonsOnload.addClass("giphy");
+            buttonsOnload.attr("data-presetlist", buttonsList[i]);
+            //add to screen
+            $("#buttons-display").append(buttonsOnload);
 
-					// $("button").on("click", function(){
 
-					// 	for (var i = 0; i < 10; i++){
-					// 		//Write a Picture
-					// 		// $("#gif-display").append($("<p>").append(response.data[i].rating));
 
-					// 		console.log(response.data[i].rating)
-					// 		// Write a Rating
-					// 		$("#gif-display").append($("div").append(response.data[i].images.fixed_height.url));
-					// 	}
-						
-					// });
-			}
-		}
+            // $("button").on("click", function(){
 
-function giphyInfo(){
-	var gif = $(this).attr("data-presetlist");
-	var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gif + "&limit=10&rating=g&api_key=dc6zaTOxFJmzC";
+            // 	for (var i = 0; i < 10; i++){
+            // 		//Write a Picture
+            // 		// $("#gif-display").append($("<p>").append(response.data[i].rating));
 
-	$.ajax({
-		url: queryURL,
-		method: "GET"
-	}).done(function(response){
-		console.log(response);
+            // 		console.log(response.data[i].rating)
+            // 		// Write a Rating
+            // 		$("#gif-display").append($("div").append(response.data[i].images.fixed_height.url));
+            // 	}
 
-		for (var i = 0; i < 10; i++)
+            // });
+        }
+        $(".giphy").on("click", function() {
+            giphyInfo($(this).attr("data-presetlist"));
 
-		var imgUrl = response.data[i].images.fixed_height.url;
-		var theGif = $("<img>").attr("src", imgUrl);
-		$("#gif-display").append(theGif);
-		
-		var rate = response.data[i].rating;
-		var rating = $("<p>").text("Rating: " + rate);
-		$("#gif-display").append(theGif);
+        })
+    }
+    renderButtons();
 
-		console.log(rate)
+    function giphyInfo(gif) {
+    	$("#gif-display").empty();
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gif + "&limit=10&rating=g&api_key=dc6zaTOxFJmzC";
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log(response);
+
+            for (var i = 0; i < 10; i++) {
+
+                var imgUrl = response.data[i].images.fixed_height.url;
+                var theGif = $("<img>").attr("src", imgUrl);
+
+                $("#gif-display").append(theGif);
+
+            }
 
 
 
 
-		
+            // var rate = response.data[i].rating;
+            // var rating = $("<p>").text("Rating: " + rate);
+            // $("#gif-display").append(theGif);
+
+            // console.log(rate)
 
 
 
+        })
+    }
 
-
-	})
- }
-
-			
-
-
-
-//For Adding New Buttons
-
-$("#add-buttons").on("click", function(){
-
-	event.preventDefault();
-
-	var term = $("#user-input").val().trim();
-	console.log(term);
-
-	var newButton = $("<button>").append(term);
-
-	// buttonsList.push(term);
-	$("#buttons-display").append(newButton);
-
-	
-
-
-});
-
-renderButtons();
-
-		
-
-
-
-	
-
-	
+    // $(document).on("click", ".giphy", console.log("giphyInfo"));
 
 
 
@@ -140,7 +107,25 @@ renderButtons();
 
 
 
+    //For Adding New Buttons
 
-</script>
+    $("#add-buttons").on("click", function() {
+
+        event.preventDefault();
+
+        var term = $("#user-input").val().trim();
+        console.log(term);
+
+        var newButton = $("<button>").append(term);
+
+        buttonsList.push(term);
+        // $("#buttons-display").append(newButton);
+        renderButtons();
+
+
+
+    });
+    </script>
 </body>
+
 </html>
